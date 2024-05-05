@@ -8,5 +8,5 @@ class Level:
         self.obstacles_sprites = pygame.sprite.Group()
 
     def run(self):
-    #for update and drawing the game
-    pass#not doing anything for now
+        #for update and drawing the game
+        pass
