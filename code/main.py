@@ -1,6 +1,5 @@
 import pygame, sys
-from settings import * 
-from debug import debug 
+from settings import *  
 
 class Game:
     def __init__(self):
@@ -8,6 +7,7 @@ class Game:
         #this fir generao setup
         pygame.init()
         self.screen = pygame.display.set_mode((WIDTH,HEIGTH))
+        pygame.display.set_caption('Eldoria: A Quest for Retribution')
         self.clock = pygame.time.Clock()
 
     def run(self):
@@ -18,7 +18,6 @@ class Game:
                     sys.exit()
 
             self.screen.fill('black')
-            debug('hhelo boss :')
             pygame.display.update()
             self.clock.tick(FPS)
 
