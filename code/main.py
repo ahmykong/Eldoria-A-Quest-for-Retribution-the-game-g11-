@@ -13,11 +13,12 @@ class Game:
     def run(self):
         while True:
             for event in pygame.event.get():
-                if event.type == pygame.QUIt:
+                if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
 
             self.screen.fill('black')
+            debug('hhelo boss :')
             pygame.display.update()
             self.clock.tick(FPS)
 
