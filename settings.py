@@ -4,5 +4,5 @@ FPS    = 60
 TITLESIZE = 64
 
 WORLD_MAP = [
-    
+
 ]
