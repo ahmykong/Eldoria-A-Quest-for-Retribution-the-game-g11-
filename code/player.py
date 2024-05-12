@@ -1,4 +1,5 @@
 import pygame
+from debug import debug
 from settings import *
 
 class Player(pygame.sprite.Sprite):
@@ -30,3 +31,4 @@ class Player(pygame.sprite.Sprite):
         #update and draw again
         self.visible_sprites.draw(self.display_surface)
         self.visible_sprites.update()
+        
