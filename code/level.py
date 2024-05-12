@@ -23,9 +23,11 @@ class Level:
                 x = col_index * TITLESIZE
                 y = row_index * TITLESIZE
                 if col == 'x': 
-                    Tile((x,y),[self.visible_sprites])
+                    Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
+                if col == 'p':
+                    Player((x,y),[self.visible_sprites])
 
 
     def run(self):
         #for updating and drawing
-        self.visible_sprites.draw(self.display_surface)#test for branch errorss
+        self.visible_sprites.draw(self.display_surface)
