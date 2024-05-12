@@ -9,6 +9,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
 
         self .direction = pygame.math.Vector2()  #direction for the player to walk
+        self.speed = 5 
 
     def input(self):
         keys = pygame.key.get_pressed()  #keyboard input
@@ -27,8 +28,12 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x= 0 
 
+    def move(self,speed):
+        self.rect.center += self.direction * speed
+
     def update(self):
         #update and draw again
         self.input()
+        self.move(self.speed)
         
         
