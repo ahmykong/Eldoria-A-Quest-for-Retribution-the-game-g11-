@@ -30,4 +30,4 @@ class Level:
 
     def run(self):
         #for updating and drawing
-        self.visible_sprites.draw(self.display_surface)
+        self.visible_sprites.draw(self.display_surface)#test2
