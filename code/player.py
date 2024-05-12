@@ -11,24 +11,24 @@ class Player(pygame.sprite.Sprite):
         self .direction = pygame.math.Vector2()  #direction for the player to walk
 
     def input(self):
-        keys = pygame.key.get_pressed  #keyboard input
+        keys = pygame.key.get_pressed()  #keyboard input
 
         if keys[pygame.keys.K_UP]:
-            self.direction.y =-1
+            self.direction.y = -1
         elif keys[pygame.keys.K_DOWN]:
-            self.direction.y =1
+            self.direction.y = 1
         else:
             self.direction.y= 0 #to stop the player from moving in one direction
 
         if keys[pygame.keys.K_RIGHT]:
-            self.direction.x =1
+            self.direction.x = 1
         elif keys[pygame.keys.K_LEFT]:
-            self.direction.x =1
+            self.direction.x = -1
         else:
             self.direction.x= 0 
 
-    def run(self):
+    def update(self):
         #update and draw again
-        self.visible_sprites.draw(self.display_surface)
-        self.visible_sprites.update()
+        self.input()
+        
         
