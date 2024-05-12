@@ -1,8 +1,0 @@
-WIDTH  = 1920
-HEIGTH = 720
-FPS    = 60
-TITLESIZE = 64
-
-WORLD_MAP = [
-
-]
