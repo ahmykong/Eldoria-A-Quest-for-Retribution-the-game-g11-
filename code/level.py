@@ -19,13 +19,13 @@ class Level:
   
     def create_map(self):
         for row_index,row in enumerate(WORLD_MAP):
-            for col_index, col in enumerate(row):#give index for x,y posiiton
-                x = col_index * TILESIZE
-                y = row_index * TILESIZE
+            for col_index, col in enumerate(row):#to give num for x,y pos
+                x = col_index * TITLESIZE
+                y = row_index * TITLESIZE
                 if col == 'x': 
-                    Tile((x,y),[self.visible_sprites])#((pos,gorups))
+                    Tile((x,y),[self.visible_sprites])
 
 
     def run(self):
-        #for update and drawing the game
+        #for updating and drawing
         self.visible_sprites.draw(self.display_surface)
