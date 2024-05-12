@@ -12,7 +12,7 @@ class Level:
 
         #for sprite grup setp
         self.visible_sprites = pygame.sprite.Group()
-        self.obstacles_sprites = pygame.sprite.Group()
+        self.obstacle_sprites = pygame.sprite.Group()
 
         #setup sprite
         self.create_map()
