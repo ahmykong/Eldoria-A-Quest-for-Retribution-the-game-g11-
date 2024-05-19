@@ -20,7 +20,7 @@ class Level:
   
     def create_map(self):
         for row_index,row in enumerate(WORLD_MAP):
-            for col_index, col in enumerate(row):#to give num for x,y pos
+            for col_index, col in enumerate(row): #to give num for x,y pos
                 x = col_index * TITLESIZE
                 y = row_index * TITLESIZE
                 if col == 'x': 
@@ -34,3 +34,15 @@ class Level:
         self.visible_sprites.draw(self.display_surface)
         self.visible_sprites.update()
         debug(self.player.direction)
+
+class YSortCameraGroup(pygame.sprite.Group):
+	def _init_(self):
+
+		# general setup 
+		super()._init_()
+		self.display_surface = pygame.display.get_surface()
+		self.half_width = self.display_surface.get_size()[0] // 2
+		self.half_height = self.display_surface.get_size()[1] // 2
+		self.offset = pygame.math.Vector2()
+
+	
