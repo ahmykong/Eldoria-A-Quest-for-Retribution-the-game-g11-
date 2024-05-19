@@ -1,5 +1,4 @@
 import pygame
-
 from settings import *
 from tile import Tile
 from player import Player
@@ -28,18 +27,17 @@ class Level:
                 if col == 'p':
                    self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites)
 
-
     def run(self):
         #for updating and drawing
-        self.visible_sprites.draw(self.display_surface)
+        self.visible_sprites.custom_draw(self.player)
         self.visible_sprites.update()
         
 
 class YSortCameraGroup(pygame.sprite.Group):
-	def _init_(self):
+	def __init__(self):
 
 		# general setup 
-		super()._init_()
+		super().__init__()
 		self.display_surface = pygame.display.get_surface()
 		self.half_width = self.display_surface.get_size()[0] // 2
 		self.half_height = self.display_surface.get_size()[1] // 2
