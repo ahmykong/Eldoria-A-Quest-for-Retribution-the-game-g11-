@@ -12,7 +12,7 @@ class Level:
         self.display_surface = pygame.display.get_surface()
 
         #for sprite grup setp
-        self.visible_sprites = pygame.sprite.Group()
+        self.visible_sprites = YSortCameraGroup()
         self.obstacle_sprites = pygame.sprite.Group()
 
         #setup sprite
