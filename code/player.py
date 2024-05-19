@@ -36,7 +36,7 @@ class Player(pygame.sprite.Sprite):
 
         self.rect.x += self.direction.x * speed
         self.collision('horizontal')
-        self.rect.y += self.direction.x * speed
+        self.rect.y += self.direction.y * speed
         self.collision('vertical')
 
     def collision(self,direction):
@@ -53,7 +53,7 @@ class Player(pygame.sprite.Sprite):
                 if sprite.rect.colliderect(self.rect): #to tell a collison between horizonttal sprites
                     if self.direction.y > 0 : #moving down
                         self.rect.bottom = sprite.rect.top
-                    if self.direction.y < 0:
+                    if self.direction.y < 0: 
                         self.rect.top = sprite.rect.bottom
 
     def update(self):
