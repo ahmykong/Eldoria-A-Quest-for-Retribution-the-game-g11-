@@ -33,7 +33,7 @@ class Level:
         #for updating and drawing
         self.visible_sprites.draw(self.display_surface)
         self.visible_sprites.update()
-        debug(self.player.direction)
+        
 
 class YSortCameraGroup(pygame.sprite.Group):
 	def _init_(self):

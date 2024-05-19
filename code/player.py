@@ -44,19 +44,19 @@ class Player(pygame.sprite.Sprite):
     def collision(self,direction):
         if direction == 'horizontal':
             for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.rect): #to tell a collison between horizonttal sprites
+                if sprite.hitbox.colliderect(self.hitbox): #to tell a collison between horizonttal sprites
                     if self.direction.x > 0 : #moving right
-                        self.rect.right = sprite.hitbox.left 
+                        self.hitbox.right = sprite.hitbox.left 
                     if self.direction.x < 0:
-                        self.rect.left = sprite.hitbox.right
+                        self.hitbox.left = sprite.hitbox.right
 
         if direction == 'vertical':
             for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.rect): #to tell a collison between horizonttal sprites
+                if sprite.hitbox.colliderect(self.hitbox): #to tell a collison between horizonttal sprites
                     if self.direction.y > 0 : #moving down
-                        self.rect.bottom = sprite.hitbox.top
+                        self.hitbox.bottom = sprite.hitbox.top
                     if self.direction.y < 0: 
-                        self.rect.top = sprite.hitbox.bottom
+                        self.hitbox.top = sprite.hitbox.bottom
 
     def update(self):
         #update and draw again
