@@ -9,6 +9,13 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(topleft = pos)
         self.hitbox = self.rect.inflate(0,-26)
 
+        #stats for the player
+        self.stats = {'health': 100,'energy':60,'attack': 10,'magic': 4,'speed': 5}
+        self.health = self.stats['health'] * 0.5
+        self.exp = 123
+        self.speed = self.stats['speed']
+
+
         self .direction = pygame.math.Vector2()  #direction for the player to walk
         self.speed = 5
 
