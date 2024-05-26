@@ -4,9 +4,18 @@ from settings import *
 class Player(pygame.sprite.Sprite):
 	def __init__(self,pos,groups,obstacle_sprites):
 		super().__init__(groups)
-		self.image = pygame.image.load('../graphics/test/player.png').convert_alpha()
+		self.image = pygame.image.load('5 - level graphics/graphics/test/Main.png').convert_alpha()
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.inflate(0,-26)
+
+# stats
+		self.stats = {'health': 100,'energy':60,'attack': 10,'magic': 4,'speed': 5}
+		self.health = self.stats['health'] * 0.5
+		self.energy = self.stats['energy'] * 0.8
+		self.exp = 123
+		self.speed = self.stats['speed']
+
+	
 
 		self.direction = pygame.math.Vector2()
 		self.speed = 5
@@ -15,7 +24,7 @@ class Player(pygame.sprite.Sprite):
 
 	def input(self):
 		keys = pygame.key.get_pressed()
-
+#movement input
 		if keys[pygame.K_UP]:
 			self.direction.y = -1
 		elif keys[pygame.K_DOWN]:
