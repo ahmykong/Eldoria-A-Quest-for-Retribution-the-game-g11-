@@ -75,6 +75,21 @@ class Player(pygame.sprite.Sprite):
         else:
             self.direction.x= 0 
 
+        # attack input 
+			if keys[pygame.K_SPACE]:
+				self.attacking = True
+				self.attack_time = pygame.time.get_ticks()
+				self.create_attack()
+
+			# magic input 
+			if keys[pygame.K_LCTRL]:
+				self.attacking = True
+				self.attack_time = pygame.time.get_ticks()
+				style = list(magic_data.keys())[self.magic_index]
+				strength = list(magic_data.values())[self.magic_index]['strength'] + self.stats['magic']
+				cost = list(magic_data.values())[self.magic_index]['cost']
+				self.create_magic(style,strength,cost)
+
     def move(self,speed):
         if self.direction.magnitude() != 0: #to reduce the speed if the player goees sideway
             self.direction = self.direction.normalize()
