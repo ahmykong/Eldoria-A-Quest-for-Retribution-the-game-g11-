@@ -1,53 +1,72 @@
-import pygame
+import pygame 
 from settings import *
 from tile import Tile
 from player import Player
 from debug import debug
+from support import *
+from random import choice
 
 class Level:
-    def __init__(self):
+	def _init_(self):
 
-        #TO GET DISPLAY SURFACE
-        self.display_surface = pygame.display.get_surface()
+		# get the display surface 
+		self.display_surface = pygame.display.get_surface()
 
-        #for sprite grup setp
-        self.visible_sprites = YSortCameraGroup()
-        self.obstacle_sprites = pygame.sprite.Group()
+		# sprite group setup
+		self.visible_sprites = YSortCameraGroup()
+		self.obstacle_sprites = pygame.sprite.Group()
 
-        #setup sprite
-        self.create_map()
-  
-    def create_map(self):
-        for row_index,row in enumerate(WORLD_MAP):
-            for col_index, col in enumerate(row): #to give num for x,y pos
-                x = col_index * TITLESIZE
-                y = row_index * TITLESIZE
-                if col == 'x': 
-                    Tile((x,y),[self.visible_sprites,self.obstacle_sprites])
-                if col == 'p':
-                   self.player = Player((x,y),[self.visible_sprites],self.obstacle_sprites)
+		# sprite setup
+		self.create_map()
 
-    def run(self):
-        #for updating and drawing
-        self.visible_sprites.custom_draw(self.player)
-        self.visible_sprites.update()
-        
+	def create_map(self):
+	
+		#for style,layout in layouts.items():
+		#	for row_index,row in enumerate(layout):
+			#	for col_index, col in enumerate(row):
+			#		if col != '-1':
+			#			x = col_index * TILESIZE
+			#			y = row_index * TILESIZE
+			#			if style == 'boundary':
+			#				Tile((x,y),[self.obstacle_sprites],'invisible')
+			#			if style == 'grass':
+			#				random_grass_image = choice(graphics['grass'])
+			#				Tile((x,y),[self.visible_sprites,self.obstacle_sprites],'grass',random_grass_image)
+#
+				#		if style == 'object':
+				#			surf = graphics['objects'][int(col)]
+			#				Tile((x,y),[self.visible_sprites,self.obstacle_sprites],'object',surf)
+
+		self.player = Player((6200,4200),[self.visible_sprites],self.obstacle_sprites)
+	def run(self):
+		# update and draw the game
+		self.visible_sprites.custom_draw(self.player)
+		self.visible_sprites.update()
+
 
 class YSortCameraGroup(pygame.sprite.Group):
-	def __init__(self):
+	def _init_(self):
 
 		# general setup 
-		super().__init__()
+		super()._init_()
 		self.display_surface = pygame.display.get_surface()
 		self.half_width = self.display_surface.get_size()[0] // 2
 		self.half_height = self.display_surface.get_size()[1] // 2
 		self.offset = pygame.math.Vector2()
+
+		# creating the floor
+		self.floor_surf = pygame.image.load('5 - level graphics/graphics/tilemap/MAP.png').convert()
+		self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
 	def custom_draw(self,player):
 
 		# getting the offset 
 		self.offset.x = player.rect.centerx - self.half_width
 		self.offset.y = player.rect.centery - self.half_height
+
+		# drawing the floor
+		floor_offset_pos = self.floor_rect.topleft - self.offset
+		self.display_surface.blit(self.floor_surf,floor_offset_pos)
 
 		# for sprite in self.sprites():
 		for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
