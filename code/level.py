@@ -5,6 +5,10 @@ from player import Player
 from debug import debug
 from support import *
 from random import choice, randint
+from weapon import Weapon
+from ui import UI
+from enemyfixed import Enemy
+from magic import MagicPlayer
 
 class Level:
 	def _init_(self):
@@ -17,24 +21,18 @@ class Level:
 		self.visible_sprites = YSortCameraGroup()
 		self.obstacle_sprites = pygame.sprite.Group()
 
-		#attack spr
+		# attack sprites
 		self.current_attack = None
-		self.attack_current = pygame.sprite.Group()
+		self.attack_sprites = pygame.sprite.Group()
 		self.attackable_sprites = pygame.sprite.Group()
-
-		# sprite setup
-		self.create_map()
 
 		# sprite setup
 		self.create_map()
 
 		# user interface 
 		self.ui = UI()
-		self.upgrade = Upgrade(self.player)
+	
 
-		# particles
-		self.animation_player = AnimationPlayer()
-		self.magic_player = MagicPlayer(self.animation_player)
 
 	def create_map(self):
 		layouts = {
@@ -151,6 +149,7 @@ class Level:
 			self.visible_sprites.update()
 			self.visible_sprites.enemy_update(self.player)
 			self.player_attack_logic()
+		
 
 class YSortCameraGroup(pygame.sprite.Group):
 	def _init_(self):
@@ -163,7 +162,7 @@ class YSortCameraGroup(pygame.sprite.Group):
 		self.offset = pygame.math.Vector2()
 
 		# creating the floor
-		self.floor_surf = pygame.image.load('5 - level graphics/graphics/tilemap/MAP.png').convert()
+		self.floor_surf = pygame.image.load('../graphics/tilemap/ground.png').convert()
 		self.floor_rect = self.floor_surf.get_rect(topleft = (0,0))
 
 	def custom_draw(self,player):
@@ -180,3 +179,8 @@ class YSortCameraGroup(pygame.sprite.Group):
 		for sprite in sorted(self.sprites(),key = lambda sprite: sprite.rect.centery):
 			offset_pos = sprite.rect.topleft - self.offset
 			self.display_surface.blit(sprite.image,offset_pos)
+
+	def enemy_update(self,player):
+		enemy_sprites = [sprite for sprite in self.sprites() if hasattr(sprite,'sprite_type') and sprite.sprite_type == 'enemy']
+		for enemy in enemy_sprites:
+			enemy.enemy_update(player)
