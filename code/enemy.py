@@ -1,4 +1,12 @@
-# general setup
+import pygame
+from settings import *
+from entity import Entity
+from support import *
+
+class Enemy(Entity):
+    def __init__(self,monster_name,pos,groups,obstacle_sprites,damage_player,trigger_death_particles,add_exp):
+
+    # general setup
     super()._init_(groups)
     self.sprite_type = 'enemy'
 
