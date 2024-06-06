@@ -8,10 +8,12 @@ from random import choice, randint
 from weapon import Weapon
 from ui import UI
 from enemyfixed import Enemy
+from particles import AnimationPlayer
 from magic import MagicPlayer
+from upgrade import Upgrade
 
 class Level:
-	def _init_(self):
+	def __init__(self):
 
 		# get the display surface 
 		self.display_surface = pygame.display.get_surface()
@@ -31,8 +33,11 @@ class Level:
 
 		# user interface 
 		self.ui = UI()
-	
+		self.upgrade = Upgrade(self.player)
 
+		# particles
+		self.animation_player = AnimationPlayer()
+		self.magic_player = MagicPlayer(self.animation_player)
 
 	def create_map(self):
 		layouts = {
@@ -152,10 +157,10 @@ class Level:
 		
 
 class YSortCameraGroup(pygame.sprite.Group):
-	def _init_(self):
+	def __init__(self):
 
 		# general setup 
-		super()._init_()
+		super().__init__()
 		self.display_surface = pygame.display.get_surface()
 		self.half_width = self.display_surface.get_size()[0] // 2
 		self.half_height = self.display_surface.get_size()[1] // 2

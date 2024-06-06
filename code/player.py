@@ -4,9 +4,9 @@ from support import import_folder
 from entity import Entity
 
 class Player(Entity):
-	def _init_(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,create_magic):
-		super()._init_(groups)
-		self.image = pygame.image.load('../graphics/test/player.png').convert_alpha()
+	def __init__(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,create_magic):
+		super().__init__(groups)
+		self.image = pygame.image.load('../graphics/test/rock.png').convert_alpha()
 		self.rect = self.image.get_rect(topleft = pos)
 		self.hitbox = self.rect.inflate(0,-26)
 
@@ -207,5 +207,3 @@ class Player(Entity):
 		self.animate()
 		self.move(self.stats['speed'])
 		self.energy_recovery()
-        
-        

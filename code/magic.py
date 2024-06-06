@@ -3,7 +3,7 @@ from settings import *
 from random import randint
 
 class MagicPlayer:
-	def _init_(self,animation_player):
+	def __init__(self,animation_player):
 		self.animation_player = animation_player
 
 	def heal(self,player,strength,cost,groups):
@@ -34,4 +34,4 @@ class MagicPlayer:
 					offset_y = (direction.y * i) * TILESIZE
 					x = player.rect.centerx + randint(-TILESIZE // 3, TILESIZE // 3)
 					y = player.rect.centery + offset_y + randint(-TILESIZE // 3, TILESIZE // 3)
-					self.animation_player.create_particles('flame',(x,y),groups)			
+					self.animation_player.create_particles('flame',(x,y),groups)

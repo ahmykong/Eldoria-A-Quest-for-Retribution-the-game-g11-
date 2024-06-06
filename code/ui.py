@@ -2,7 +2,7 @@ import pygame
 from settings import * 
 
 class UI:
-	def _init_(self):
+	def __init__(self):
 		
 		# general 
 		self.display_surface = pygame.display.get_surface()
