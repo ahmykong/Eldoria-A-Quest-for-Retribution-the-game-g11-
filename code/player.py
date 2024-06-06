@@ -1,20 +1,20 @@
-import pygame
-from debug import debug
+import pygame 
 from settings import *
-from support import_folder
+from support import import_folder
+from entity import Entity
 
-class Player(pygame.sprite.Sprite):
-    def __init__(self,pos,groups,obstacle_sprites):
-        super().__init__(groups)
-        self.image = pygame.image.load('../graphics/test/player.png').convert_alpha()
-        self.rect = self.image.get_rect(topleft = pos)
-        self.hitbox = self.rect.inflate(0,-26)
+class Player(Entity):
+	def _init_(self,pos,groups,obstacle_sprites,create_attack,destroy_attack,create_magic):
+		super()._init_(groups)
+		self.image = pygame.image.load('../graphics/test/player.png').convert_alpha()
+		self.rect = self.image.get_rect(topleft = pos)
+		self.hitbox = self.rect.inflate(0,-26)
 
-        #graphic setup
-        self.import_player_assets()
-        self.status = 'down'
+		# graphics setup
+		self.import_player_assets()
+		self.status = 'down'
 
-        # movement 
+		# movement 
 		self.attacking = False
 		self.attack_cooldown = 400
 		self.attack_time = None
@@ -36,20 +36,22 @@ class Player(pygame.sprite.Sprite):
 		self.can_switch_magic = True
 		self.magic_switch_time = None
 
-        #stats for the player
-        self.stats = {'health': 100,'energy':60,'attack': 10,'magic': 4,'speed': 5}
-        self.health = self.stats['health'] * 0.5
-        self.exp = 123
-        self.speed = self.stats['speed']
+		# stats
+		self.stats = {'health': 100,'energy':60,'attack': 10,'magic': 4,'speed': 5}
+		self.max_stats = {'health': 300, 'energy': 140, 'attack': 20, 'magic' : 10, 'speed': 10}
+		self.upgrade_cost = {'health': 100, 'energy': 100, 'attack': 100, 'magic' : 100, 'speed': 100}
+		self.health = self.stats['health'] * 0.5
+		self.energy = self.stats['energy'] * 0.8
+		self.exp = 5000
+		self.speed = self.stats['speed']
 
+		# damage timer
+		self.vulnerable = True
+		self.hurt_time = None
+		self.invulnerability_duration = 500
 
-        self .direction = pygame.math.Vector2()  #direction for the player to walk
-        self.speed = 5
-
-        self.obstacle_sprites = obstacle_sprites 
-
-    def import_assets(self):
-        character_path = '../graphics/player/'
+	def import_player_assets(self):
+		character_path = '../graphics/player/'
 		self.animations = {'up': [],'down': [],'left': [],'right': [],
 			'right_idle':[],'left_idle':[],'up_idle':[],'down_idle':[],
 			'right_attack':[],'left_attack':[],'up_attack':[],'down_attack':[]}
@@ -58,24 +60,30 @@ class Player(pygame.sprite.Sprite):
 			full_path = character_path + animation
 			self.animations[animation] = import_folder(full_path)
 
-    def input(self):
-        keys = pygame.key.get_pressed()  #keyboard input
+	def input(self):
+		if not self.attacking:
+			keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_UP]:
-            self.direction.y = -1
-        elif keys[pygame.K_DOWN]:
-            self.direction.y = 1
-        else:
-            self.direction.y= 0 #to stop the player from moving in one direction
+			# movement input
+			if keys[pygame.K_UP]:
+				self.direction.y = -1
+				self.status = 'up'
+			elif keys[pygame.K_DOWN]:
+				self.direction.y = 1
+				self.status = 'down'
+			else:
+				self.direction.y = 0
 
-        if keys[pygame.K_RIGHT]:
-            self.direction.x = 1
-        elif keys[pygame.K_LEFT]:
-            self.direction.x = -1
-        else:
-            self.direction.x= 0 
+			if keys[pygame.K_RIGHT]:
+				self.direction.x = 1
+				self.status = 'right'
+			elif keys[pygame.K_LEFT]:
+				self.direction.x = -1
+				self.status = 'left'
+			else:
+				self.direction.x = 0
 
-        # attack input 
+			# attack input 
 			if keys[pygame.K_SPACE]:
 				self.attacking = True
 				self.attack_time = pygame.time.get_ticks()
@@ -90,36 +98,114 @@ class Player(pygame.sprite.Sprite):
 				cost = list(magic_data.values())[self.magic_index]['cost']
 				self.create_magic(style,strength,cost)
 
-    def move(self,speed):
-        if self.direction.magnitude() != 0: #to reduce the speed if the player goees sideway
-            self.direction = self.direction.normalize()
+			if keys[pygame.K_q] and self.can_switch_weapon:
+				self.can_switch_weapon = False
+				self.weapon_switch_time = pygame.time.get_ticks()
+				
+				if self.weapon_index < len(list(weapon_data.keys())) - 1:
+					self.weapon_index += 1
+				else:
+					self.weapon_index = 0
+					
+				self.weapon = list(weapon_data.keys())[self.weapon_index]
 
-        self.hitbox.x += self.direction.x * speed
-        self.collision('horizontal')
-        self.hitbox.y += self.direction.y * speed
-        self.collision('vertical')
-        self.rect.center = self.hitbox.center
+			if keys[pygame.K_e] and self.can_switch_magic:
+				self.can_switch_magic = False
+				self.magic_switch_time = pygame.time.get_ticks()
+				
+				if self.magic_index < len(list(magic_data.keys())) - 1:
+					self.magic_index += 1
+				else:
+					self.magic_index = 0
 
-    def collision(self,direction):
-        if direction == 'horizontal':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox): #to tell a collison between horizonttal sprites
-                    if self.direction.x > 0 : #moving right
-                        self.hitbox.right = sprite.hitbox.left 
-                    if self.direction.x < 0:
-                        self.hitbox.left = sprite.hitbox.right
+				self.magic = list(magic_data.keys())[self.magic_index]
 
-        if direction == 'vertical':
-            for sprite in self.obstacle_sprites:
-                if sprite.hitbox.colliderect(self.hitbox): #to tell a collison between horizonttal sprites
-                    if self.direction.y > 0 : #moving down
-                        self.hitbox.bottom = sprite.hitbox.top
-                    if self.direction.y < 0: 
-                        self.hitbox.top = sprite.hitbox.bottom
+	def get_status(self):
 
-    def update(self):
-        #update and draw again
-        self.input()
-        self.move(self.speed)
+		# idle status
+		if self.direction.x == 0 and self.direction.y == 0:
+			if not 'idle' in self.status and not 'attack' in self.status:
+				self.status = self.status + '_idle'
+
+		if self.attacking:
+			self.direction.x = 0
+			self.direction.y = 0
+			if not 'attack' in self.status:
+				if 'idle' in self.status:
+					self.status = self.status.replace('_idle','_attack')
+				else:
+					self.status = self.status + '_attack'
+		else:
+			if 'attack' in self.status:
+				self.status = self.status.replace('_attack','')
+
+	def cooldowns(self):
+		current_time = pygame.time.get_ticks()
+
+		if self.attacking:
+			if current_time - self.attack_time >= self.attack_cooldown + weapon_data[self.weapon]['cooldown']:
+				self.attacking = False
+				self.destroy_attack()
+
+		if not self.can_switch_weapon:
+			if current_time - self.weapon_switch_time >= self.switch_duration_cooldown:
+				self.can_switch_weapon = True
+
+		if not self.can_switch_magic:
+			if current_time - self.magic_switch_time >= self.switch_duration_cooldown:
+				self.can_switch_magic = True
+
+		if not self.vulnerable:
+			if current_time - self.hurt_time >= self.invulnerability_duration:
+				self.vulnerable = True
+
+	def animate(self):
+		animation = self.animations[self.status]
+
+		# loop over the frame index 
+		self.frame_index += self.animation_speed
+		if self.frame_index >= len(animation):
+			self.frame_index = 0
+
+		# set the image
+		self.image = animation[int(self.frame_index)]
+		self.rect = self.image.get_rect(center = self.hitbox.center)
+
+		# flicker 
+		if not self.vulnerable:
+			alpha = self.wave_value()
+			self.image.set_alpha(alpha)
+		else:
+			self.image.set_alpha(255)
+
+	def get_full_weapon_damage(self):
+		base_damage = self.stats['attack']
+		weapon_damage = weapon_data[self.weapon]['damage']
+		return base_damage + weapon_damage
+
+	def get_full_magic_damage(self):
+		base_damage = self.stats['magic']
+		spell_damage = magic_data[self.magic]['strength']
+		return base_damage + spell_damage
+
+	def get_value_by_index(self,index):
+		return list(self.stats.values())[index]
+
+	def get_cost_by_index(self,index):
+		return list(self.upgrade_cost.values())[index]
+
+	def energy_recovery(self):
+		if self.energy < self.stats['energy']:
+			self.energy += 0.01 * self.stats['magic']
+		else:
+			self.energy = self.stats['energy']
+
+	def update(self):
+		self.input()
+		self.cooldowns()
+		self.get_status()
+		self.animate()
+		self.move(self.stats['speed'])
+		self.energy_recovery()
         
         
