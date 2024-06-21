@@ -10,9 +10,9 @@ HITBOX_OFFSET = {
 	'invisible': 0}
 
 # ui 
-BAR_HEIGHT = 20
+BAR_HEIGHT = 20   #changing this dosent seem to work
 HEALTH_BAR_WIDTH = 200
-ENERGY_BAR_WIDTH = 140
+ENERGY_BAR_WIDTH = 100
 ITEM_BOX_SIZE = 80
 UI_FONT = '../graphics/font/joystix.ttf'
 UI_FONT_SIZE = 18

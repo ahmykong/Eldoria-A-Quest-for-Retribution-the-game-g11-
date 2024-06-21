@@ -12,11 +12,6 @@ class Game:
 		self.clock = pygame.time.Clock()
 
 		self.level = Level()
-
-		# sound 
-		main_sound = pygame.mixer.Sound('../audio/main.ogg')
-		main_sound.set_volume(0.5)
-		main_sound.play(loops = -1)
 	
 	def run(self):
 		while True:
@@ -25,13 +20,13 @@ class Game:
 					pygame.quit()
 					sys.exit()
 				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_m:
+					if event.key == pygame.K_1: # upgrade menu
 						self.level.toggle_menu()
 
-			self.screen.fill(WATER_COLOR)
+			self.screen.fill(WATER_COLOR) #background water i meant around the area
 			self.level.run()
 			pygame.display.update()
-			self.clock.tick(FPS)
+			self.clock.tick(FPS) # i dont hink this is important cuz dosent show the clock
 
 if __name__ == '__main__':
 	game = Game()
