@@ -2,18 +2,14 @@ import pygame, sys
 from settings import *
 from level import Level
 
+
 SCREEN_WIDTH = 1280	
 SCREEN_HEIGHT = 720
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Eldoria')
-
-# Colors
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-
-# Font
 FONT = pygame.font.Font(None, 74)
-
 def draw_text(text, font, color, surface, x, y):
     text_obj = font.render(text, True, color)
     text_rect = text_obj.get_rect()
@@ -37,14 +33,13 @@ def start_screen():
 
 class Game:
 	def __init__(self):
-
 		# general setup
 		pygame.init()
 		self.screen = pygame.display.set_mode((WIDTH,HEIGTH))
 		pygame.display.set_caption('Eldoria')
 		self.clock = pygame.time.Clock()
-
 		self.level = Level()
+
 	
 	def run(self):
 		while True:
@@ -53,13 +48,13 @@ class Game:
 					pygame.quit()
 					sys.exit()
 				if event.type == pygame.KEYDOWN:
-					if event.key == pygame.K_1: # upgrade menu
+					if event.key == pygame.K_f:
 						self.level.toggle_menu()
-
-			self.screen.fill(WATER_COLOR) #background water i meant around the area
+					
+			self.screen.fill(WATER_COLOR)
 			self.level.run()
 			pygame.display.update()
-			self.clock.tick(FPS) # i dont hink this is important cuz dosent show the clock
+			self.clock.tick(FPS)
 
 if __name__ == '__main__':
 	start_screen()

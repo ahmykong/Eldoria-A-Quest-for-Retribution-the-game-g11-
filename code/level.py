@@ -1,3 +1,5 @@
+import os
+import sys
 import pygame 
 from settings import *
 from tile import Tile
@@ -18,26 +20,26 @@ class Level:
 		# get the display surface 
 		self.display_surface = pygame.display.get_surface()
 		self.game_paused = False
-
 		# sprite group setup
 		self.visible_sprites = YSortCameraGroup()
 		self.obstacle_sprites = pygame.sprite.Group()
-
 		# attack sprites
 		self.current_attack = None
 		self.attack_sprites = pygame.sprite.Group()
 		self.attackable_sprites = pygame.sprite.Group()
-
 		# sprite setup
 		self.create_map()
-
 		# user interface 
 		self.ui = UI()
 		self.upgrade = Upgrade(self.player)
-
 		# particles
 		self.animation_player = AnimationPlayer()
 		self.magic_player = MagicPlayer(self.animation_player)
+		# save file 
+		self.save_file_path = 'saved_file.txt'
+
+		
+		
 
 	def create_map(self):
 		layouts = {
@@ -131,7 +133,83 @@ class Level:
 			self.player.vulnerable = False
 			self.player.hurt_time = pygame.time.get_ticks()
 			self.animation_player.create_particles(attack_type,self.player.rect.center,[self.visible_sprites])
+			if self.player.health <= 0:
+				self.die()
 
+	def die(self):
+		self.death_screen()
+
+	def death_screen(self): #meningal
+			self.screen = self.display_surface
+			self.screen.fill((0, 0, 0))  # Fill screen with black
+			# Set up the font
+			font = pygame.font.Font(None, 74)
+			text = font.render("You Are Dead, Press any key to exit", True, (255, 255, 255))
+			text_rect = text.get_rect(center=(400, 300))
+			# Draw the text on the screen
+			self.screen.blit(text, text_rect)
+			pygame.display.flip()
+			# Wait for any key press to exit
+			waiting = True
+			while waiting:
+				for event in pygame.event.get():
+					if event.type == pygame.QUIT:
+						pygame.quit()
+						sys.exit()
+					if event.type == pygame.KEYDOWN:
+						waiting = False
+
+			pygame.quit()
+			sys.exit()
+
+	def save_game(self):
+		if not os.path.exists('saved_file'):
+			os.makedirs('saved_file')
+
+		with open(self.save_file_path, 'w') as f:
+			f.write(str(self.player.health) + '\n')
+			f.write(str(self.player.exp) + '\n')
+			f.write(str(self.player.rect.x) + '\n')
+			f.write(str(self.player.rect.y) + '\n')
+
+			for sprite in self.visible_sprites:
+				if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy':
+					f.write(str(sprite.rect.x) + '\n')
+					f.write(str(sprite.rect.y) + '\n')
+					f.write(str(sprite.health) + '\n')
+
+
+
+	def load_game(self):
+		if os.path.exists(self.save_file_path):
+			with open(self.save_file_path, 'r') as f:
+				lines = f.readlines()
+				try:
+					self.player.health = float(lines[0].strip())
+					self.player.exp = float(lines[1].strip())
+					self.player.rect.x = float(lines[2].strip())
+					self.player.rect.y = float(lines[3].strip())
+				except ValueError:
+					print("Error: Invalid value in save file")
+
+				for i in range(4, len(lines), 3):
+					try:
+						x = float(lines[i].strip())
+						y = float(lines[i+1].strip())
+						health = float(lines[i+2].strip())
+					except ValueError:
+						print("Error: Invalid value in save file")
+					else:
+						for sprite in self.visible_sprites:
+							if hasattr(sprite, 'sprite_type') and sprite.sprite_type == 'enemy':
+								if sprite.rect.x == x and sprite.rect.y == y:
+									sprite.health = health
+									break
+						else:
+							Enemy('bamboo', (x, y), [self.visible_sprites, self.attackable_sprites], self.obstacle_sprites, self.damage_player, self.trigger_death_particles, self.add_exp)
+
+
+        				
 	def trigger_death_particles(self,pos,particle_type):
 
 		self.animation_player.create_particles(particle_type,pos,self.visible_sprites)
@@ -154,6 +232,11 @@ class Level:
 			self.visible_sprites.update()
 			self.visible_sprites.enemy_update(self.player)
 			self.player_attack_logic()
+
+		if self.ui.save_button_rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+			self.save_game()
+		if self.ui.load_button_rect.collidepoint(pygame.mouse.get_pos()) and pygame.mouse.get_pressed()[0]:
+			self.load_game()
 		
 
 class YSortCameraGroup(pygame.sprite.Group):

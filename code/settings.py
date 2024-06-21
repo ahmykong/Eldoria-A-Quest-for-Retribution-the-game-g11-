@@ -10,9 +10,9 @@ HITBOX_OFFSET = {
 	'invisible': 0}
 
 # ui 
-BAR_HEIGHT = 20   #changing this dosent seem to work
+BAR_HEIGHT = 20
 HEALTH_BAR_WIDTH = 200
-ENERGY_BAR_WIDTH = 100
+ENERGY_BAR_WIDTH = 140
 ITEM_BOX_SIZE = 80
 UI_FONT = '../graphics/font/joystix.ttf'
 UI_FONT_SIZE = 18
@@ -25,7 +25,7 @@ TEXT_COLOR = '#EEEEEE'
 
 # ui colors
 HEALTH_COLOR = 'red'
-ENERGY_COLOR = 'blue'
+ENERGY_COLOR = 'cyan'
 UI_BORDER_COLOR_ACTIVE = 'gold'
 
 # upgrade menu
