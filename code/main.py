@@ -1,7 +1,7 @@
 import pygame, sys
 from settings import *
 from level import Level
-
+import button
 
 SCREEN_WIDTH = 1280	
 SCREEN_HEIGHT = 720
@@ -40,6 +40,7 @@ class Game:
 		self.clock = pygame.time.Clock()
 		self.level = Level()
 
+
 	
 	def run(self):
 		while True:
@@ -49,6 +50,9 @@ class Game:
 					sys.exit()
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_f:
+						self.level.toggle_menu()
+				if event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_ESCAPE:
 						self.level.toggle_menu()
 					
 			self.screen.fill(WATER_COLOR)
